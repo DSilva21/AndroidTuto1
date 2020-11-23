@@ -11,6 +11,7 @@ import org.w3c.dom.Text;
 import java.text.NumberFormat;
 
 public class MainActivity extends AppCompatActivity {
+    int quantity=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,18 +20,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitOrder(View view) {
-        int numberOfCoffees=2;
-        display(numberOfCoffees);
-        displayPrice(numberOfCoffees*5);
+        int price=quantity*5;
+        String priceMessage="Total: $"+price;
+        priceMessage=priceMessage+"\nThank you";
+        displayMessage(priceMessage);
+    }
+
+    public void increment(View view) {
+        quantity++;
+        display(quantity);
+    }
+
+    public void decrement(View view) {
+        quantity--;
+        display(quantity);
     }
 
     private void display(int number){
         TextView quantityTextView=(TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText(""+ number);
     }
-
+/*
     private void displayPrice(int number){
         TextView priceTextView=(TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
+        priceTextView.setText("Total: "+NumberFormat.getCurrencyInstance().format(number));
     }
+*/
+    private void displayMessage(String message ){
+        TextView priceTextView=(TextView)findViewById(R.id.price_text_view);
+        priceTextView.setText(message);
+    }
+
 }
