@@ -20,10 +20,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitOrder(View view) {
-        int price=quantity*5;
-        String priceMessage="Total: $"+price;
-        priceMessage=priceMessage+"\nThank you";
-        displayMessage(priceMessage);
+        int price=calculatePrice();
+        displayMessage(createOrderSummary(price));
     }
 
     public void increment(View view) {
@@ -40,15 +38,21 @@ public class MainActivity extends AppCompatActivity {
         TextView quantityTextView=(TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText(""+ number);
     }
-/*
-    private void displayPrice(int number){
-        TextView priceTextView=(TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText("Total: "+NumberFormat.getCurrencyInstance().format(number));
-    }
-*/
+
     private void displayMessage(String message ){
-        TextView priceTextView=(TextView)findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
+        TextView orderSummaryTextView=(TextView)findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
+    }
+    private int calculatePrice(){
+        return quantity*5;
     }
 
+    private String createOrderSummary(int price)
+    {
+        String priceMessage="Name: kunal";
+        priceMessage+="\nQuantity: "+quantity;
+        priceMessage+="\nTotal: $"+price;
+        priceMessage+="\nThank you";
+        return priceMessage;
+    }
 }
