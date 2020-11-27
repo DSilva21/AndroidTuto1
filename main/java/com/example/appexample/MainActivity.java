@@ -2,11 +2,14 @@ package com.example.appexample;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -28,17 +31,36 @@ public class MainActivity extends AppCompatActivity {
         String name= nameField.getText().toString();
         boolean hasWhippedCream=whippedCreamCheckBox.isChecked();
         boolean haschocolate=chocolateCheckBox.isChecked();
-        int price=calculatePrice();
+        int price=calculatePrice(hasWhippedCream,haschocolate);
         String priceMessage=createOrderSummary(name,price,hasWhippedCream,haschocolate);
-        displayMessage(priceMessage);
+
+
+        Intent intent=new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Just Java order for "+ name);
+        intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
+        if(intent.resolveActivity(getPackageManager())!=null){
+            startActivity(intent);
+        }
+
+       displayMessage(priceMessage);
     }
 
     public void increment(View view) {
+        if(quantity==100)
+        {
+            Toast.makeText(this, "You cannot have more than 100", Toast.LENGTH_SHORT).show();
+            return;
+        }
         quantity++;
         display(quantity);
     }
 
     public void decrement(View view) {
+        if(quantity==1){
+            Toast.makeText(this, "You cannot have less than 1 coffee", Toast.LENGTH_SHORT).show();
+            return;
+        }
         quantity--;
         display(quantity);
     }
@@ -52,8 +74,16 @@ public class MainActivity extends AppCompatActivity {
         TextView orderSummaryTextView=(TextView)findViewById(R.id.order_summary_text_view);
         orderSummaryTextView.setText(message);
     }
-    private int calculatePrice(){
-        return quantity*5;
+    private int calculatePrice(boolean addwhippedcream, boolean addchocolate){
+        int baseprice=5;
+        if(addwhippedcream){
+            baseprice++;
+        }
+        if(addchocolate){
+            baseprice+=2;
+        }
+
+        return quantity*baseprice;
     }
 
     private String createOrderSummary(String name, int price,boolean addwhippedCream, boolean addchocolate)
